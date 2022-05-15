@@ -1,6 +1,6 @@
 {
-  "name": "sveltekit-pwa-template",
-  "version": "0.0.1",
+  "name": "pt-multidelegator-preview",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "svelte-kit dev",
@@ -19,5 +19,7 @@
     "tslib": "^2.3.1",
     "typescript": "~4.6.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "weaverfi": "^1.16.2"
+  }
 }

@@ -1,8 +1,7 @@
 {
-  "name": "sveltekit-pwa-template",
-  "short_name": "sveltekit-pwa",
-  "background_color": "#3E82F7",
-  "theme_color": "#1e88e5",
+  "name": "PoolTogether Multidelegator Preview",
+  "short_name": "pt-multidelegator-preview",
+  "background_color": "#5C33BD",
   "display": "minimal-ui",
   "start_url": "/",
   "icons": [{
