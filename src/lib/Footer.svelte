@@ -15,6 +15,9 @@
 	<i id="heart" />
 	<span> by <a href="{githubLink}">Ncookie</a></span>
 
+	<!-- Vibing GIF -->
+	<img id="vibing" src="/images/vibing.gif" alt="We Do Be Vibin'">
+
 </footer>
 
 <!-- #################################################################################################### -->
@@ -31,11 +34,13 @@
 		width: 100%;
 		color: rgba(255, 255, 255, 0.65);
 		background: #263238;
-		font-size: 60%;
+		font-family: 'Poppins', sans-serif;
+		font-size: 70%;
 		font-weight: 800;
 		letter-spacing: 0.5px;
 		text-transform: uppercase;
-		border-top: 2px solid rgba(34,40,49,0.3);
+		border-top: 2px solid var(--accent-color);
+		overflow: hidden;
 	}
 	
 	footer span a {
@@ -64,6 +69,13 @@
 		0% { background-position: left; }
 		50% { background-position: right; }
 		100% { background-position: right; }
+	}
+
+	#vibing {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		height: 57px;
 	}
 	
 </style>

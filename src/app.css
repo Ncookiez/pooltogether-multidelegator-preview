@@ -1,10 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Righteous&display=swap');
+
 :root {
-	--primary-color: #b9c6d2;
-	--secondary-color: #d0dde9;
-	--tertiary-color: #edf0f8;
-	--accent-color: #ff3e00;
-	--heading-color: rgba(0, 0, 0, 0.7);
-	--text-color: #444444;
+	--primary-color: #5C33BD;
+	--accent-color: #FFB636;
 }
 
 * {
@@ -20,4 +18,7 @@ html, body {
 	position: relative;
 	width: 100%;
 	height: 100%;
+	font-family: 'Poppins', sans-serif;
+	color: #ffffff;
+	background-color: var(--primary-color);
 }
