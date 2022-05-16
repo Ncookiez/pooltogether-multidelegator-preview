@@ -146,7 +146,7 @@
 	<!-- Results Content -->
 	<div class="results">
 		<h2>Here's what you can expect:</h2>
-		<span class="row1">
+		<span class="resultItems">
 			<span class="avgDelegation">
 				<span>Each wallet will have</span>
 				<span class="value">{formatDollars(avgDelegation)}</span>
@@ -162,8 +162,6 @@
 				<span class="value">{formatNum(dailyWins)}</span>
 				<span>wins every single day</span>
 			</span>
-		</span>
-		<span class="row2">
 			<span class="totalWins">
 				<span>By the end, you'd expect</span>
 				<span class="value">{formatNum(totalWins)}</span>
@@ -238,7 +236,7 @@
 	.header {
 		display: flex;
 		align-items: center;
-		margin: 4em 0;
+		margin: 3em 0;
 	}
 
 	.header > img {
@@ -249,28 +247,25 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		width: 100%;
 	}
 
 	.info > span {
-		margin: .3em 0;
+		margin: .3em;
 		text-align: center;
 	}
 
-	.info > .stats, .results > span {
+	.stats {
 		display: flex;
 		align-items: center;
 	}
 
-	.info > .stats > span, .results > .row1 > span, .results > .row2 > span {
+	.stats > span, .resultItems > span {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		margin: 2em 3em;
 		white-space: nowrap;
-	}
-
-	.results > .row1 > span, .results > .row2 > span {
-		min-width: 16em;
 	}
 
 	.value {
@@ -286,6 +281,68 @@
 
 	.results {
 		margin-bottom: 10vh;
+	}
+
+	.resultItems {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		padding: 0 10vw;
+	}
+
+	.resultItems > span {
+		width: 30%;
+		margin: 1em;
+	}
+
+	@media only screen and (max-width: 2000px) {
+		.resultItems {
+			padding: 0 5vw;
+		}
+	}
+
+	@media only screen and (max-width: 1600px) {
+		.resultItems {
+			padding: 0;
+		}
+		.resultItems > span {
+			width: 18em;
+			margin: 1em;
+		}
+	}
+
+	@media only screen and (max-width: 1100px) {
+		.stats > img {
+			display: none;
+		}
+	}
+
+	@media only screen and (max-width: 850px) {
+		.header {
+			flex-direction: column;
+		}
+		.header > h1 {
+			text-align: center;
+			margin: .5em;
+		}
+	}
+
+	@media only screen and (max-width: 800px) {
+		.stats {
+			flex-direction: column;
+		}
+		.stats > span {
+			margin: 1em 0;
+		}
+	}
+
+	@media only screen and (max-width: 450px) {
+		.header > img {
+			width: 100%;
+		}
+		.header > h1 {
+			font-size: 2.2em;
+		}
 	}
 	
 </style>
