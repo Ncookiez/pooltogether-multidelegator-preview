@@ -197,7 +197,6 @@
 
 	h1, h2 {
 		font-family: 'Righteous', cursive;
-		text-align: center;
 	}
 
 	h1 {
@@ -211,6 +210,7 @@
 	h2 {
 		margin: 1em 0;
 		font-size: 1.5em;
+		text-align: center;
 		letter-spacing: 2px;
 	}
 
