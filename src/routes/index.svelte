@@ -3,6 +3,7 @@
 	// Imports:
 	import { onMount } from 'svelte';
 	import { fetchTVL } from '$lib/tvl';
+	import { fetchAPR } from '$lib/apr';
 
 	// Initializations & Exports:
 	const dailyPrizeCount = 1024;
@@ -20,7 +21,7 @@
 	$: dailyOdds = 1 / (1 - (((potentialTVL - avgDelegation) / potentialTVL) ** dailyPrizeCount));
 	$: dailyWins = input.wallets / dailyOdds;
 	$: totalWins = dailyWins * (input.weeks * 7);
-	$: apr = avgDelegation > 25000 ? 9.5 : 9.5; // <TODO> find equation for >25k avg deposit
+	$: apr = fetchAPR(potentialTVL, avgDelegation);
 	$: totalGains = (input.depositAmount * (apr / 100)) * (input.weeks / 52);
 
 	// Style Reactive Variables:
@@ -168,7 +169,7 @@
 				<span>total prize wins</span>
 			</span>
 			<span class="apr">
-				<span>With an average APR of</span>
+				<span>With a simulated APR of</span>
 				<span class="value">{formatNum(apr, 2)}%</span>
 				<span>no delegatee could complain</span>
 			</span>
