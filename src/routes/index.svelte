@@ -2,6 +2,7 @@
 
 	// Imports:
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import { fetchTVL } from '$lib/tvl';
 	import { fetchAPR } from '$lib/apr';
 
@@ -63,6 +64,14 @@
 	}
 
 	onMount(async () => {
+
+		// Setting URL Variables:
+		let urlDeposit = $page.url.searchParams.get('deposit');
+		if(urlDeposit) { input.depositAmount = parseInt(urlDeposit); }
+		let urlWeeks = $page.url.searchParams.get('weeks');
+		if(urlWeeks) { input.weeks = parseInt(urlWeeks); }
+		let urlWallets = $page.url.searchParams.get('wallets');
+		if(urlWallets) { input.wallets = parseInt(urlWallets); }
 
 		// Fetching V4 TVL:
 		protocolTVL = await fetchTVL();
