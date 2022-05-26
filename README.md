@@ -1,4 +1,4 @@
-# PoolTogether Multidelegator Preview
+# PoolTogether Multidelegator Calculator
 
 A quick app to showcase some of PoolTogether's Multidelegator potential.
 

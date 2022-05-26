@@ -84,7 +84,7 @@
 
 <!-- SvelteKit Dynamic Header -->
 <svelte:head>
-	<title>PoolTogether Multidelegator Preview</title>
+	<title>PoolTogether Multidelegator Calculator</title>
 	<meta name="description" content="A quick app to showcase some of the PoolTogether Multidelegator's potential." />
 </svelte:head>
 
@@ -96,7 +96,7 @@
 		<img src="/images/pooltogether-logo.svg" alt="PoolTogether Logo">
 		<h1>
 			<span>Multidelegator</span>
-			<span>Preview</span>
+			<span>Calculator</span>
 		</h1>
 	</div>
 
