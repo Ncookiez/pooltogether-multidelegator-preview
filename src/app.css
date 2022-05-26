@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Righteous&display=swap');
 
 :root {
-	--primary-color: #5C33BD;
+	--primary-color: #2d0b5a;
+	--secondary-color: #5227a7;
+	--highlight-color: #35f0d0;
 	--accent-color: #FFB636;
 }
 

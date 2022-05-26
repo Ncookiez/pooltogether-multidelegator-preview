@@ -5,11 +5,13 @@
 	import { page } from '$app/stores';
 	import { fetchTVL } from '$lib/tvl';
 	import { fetchAPR } from '$lib/apr';
+	import { goto } from '$app/navigation';
 
 	// Initializations & Exports:
 	const dailyPrizeCount = 1024;
 	const dailyPrizeWinnings = 7180;
 	let protocolTVL = 0;
+	let doneMounting = false;
 	let input = {
 		depositAmount: 500000,
 		weeks: 4,
@@ -18,7 +20,7 @@
 
 	// Calculation Reactive Variables:
 	$: potentialTVL = protocolTVL + input.depositAmount;
-	$: avgDelegation = input.depositAmount / input.wallets;
+	$: avgDelegation = input.depositAmount / (input.wallets || 1);
 	$: dailyOdds = 1 / (1 - (((potentialTVL - avgDelegation) / potentialTVL) ** dailyPrizeCount));
 	$: dailyWins = input.wallets / dailyOdds;
 	$: totalWins = dailyWins * (input.weeks * 7);
@@ -29,6 +31,9 @@
 	$: depositWidth = getInputWidth(input.depositAmount);
 	$: weeksWidth = getInputWidth(input.weeks);
 	$: walletsWidth = getInputWidth(input.wallets);
+
+	// URL Reactivity:
+	$: syncURL(input);
 
 	// Function to format dollars:
 	const formatDollars = (num: number) => {
@@ -63,6 +68,17 @@
 		return 3;
 	}
 
+	// Function to update URL on input changes:
+	const syncURL = (input: { depositAmount: number, weeks: number, wallets: number }) => {
+		if(doneMounting && input.depositAmount && input.weeks && input.wallets) {
+			let searchParams = new URLSearchParams(window.location.search);
+    	searchParams.set('deposit', input.depositAmount.toString());
+    	searchParams.set('weeks', input.weeks.toString());
+    	searchParams.set('wallets', input.wallets.toString());
+			goto(`?${searchParams.toString()}`, { noscroll: true, keepfocus: true });
+		}
+	}
+
 	onMount(async () => {
 
 		// Setting URL Variables:
@@ -72,9 +88,10 @@
 		if(urlWeeks) { input.weeks = parseInt(urlWeeks); }
 		let urlWallets = $page.url.searchParams.get('wallets');
 		if(urlWallets) { input.wallets = parseInt(urlWallets); }
-
+		
 		// Fetching V4 TVL:
 		protocolTVL = await fetchTVL();
+		doneMounting = true;
 		
 	});
 	
@@ -169,7 +186,7 @@
 			</span>
 			<span class="dailyWins">
 				<span>Statistically, this would be</span>
-				<span class="value">{formatNum(dailyWins)}</span>
+				<span class="value">{formatNum(dailyWins, 2)}</span>
 				<span>wins every single day</span>
 			</span>
 			<span class="totalWins">
@@ -284,8 +301,22 @@
 		color: var(--accent-color);
 	}
 
+	.inputs {
+		background-color: var(--secondary-color);
+		border: 4px solid var(--accent-color);
+		border-radius: 2em;
+	}
+
+	.inputs > h2 {
+		margin-left: 1em;
+		margin-right: 1em;
+	}
+
 	.deposit {
+		margin-left: 2em;
+		margin-right: 2em;
 		margin-bottom: 2em;
+		font-size: 1.1em;
 		text-align: center;
 	}
 

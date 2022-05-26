@@ -1,7 +1,7 @@
 {
   "name": "PoolTogether Multidelegator Calculator",
   "short_name": "pt-multidelegator-calculator",
-  "background_color": "#5C33BD",
+  "background_color": "#2d0b5a",
   "display": "minimal-ui",
   "start_url": "/",
   "icons": [{
