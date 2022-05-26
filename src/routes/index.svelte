@@ -10,6 +10,8 @@
 	// Initializations & Exports:
 	const dailyPrizeCount = 1024;
 	const dailyPrizeWinnings = 7180;
+	const toolLink = 'https://tools.pooltogether.com/delegate';
+	const docsLink = 'https://docs.pooltogether.com/pooltogether/guides/deposit-delegator';
 	let protocolTVL = 0;
 	let doneMounting = false;
 	let input = {
@@ -121,6 +123,7 @@
 	<div class="info">
 		<span>By using PoolTogether's Multidelegator, you can easily delegate to a small or large number of wallets with an amount of your choosing.</span>
 		<span>Every wallet you delegate to will have a chance of winning a prize of their own, while you still have complete control over your deposit.</span>
+		<span>Feel free to use our <a href="{toolLink}" target="_blank">delegator app</a>, or <a href="{docsLink}" target="_blank">read our documentation</a> to learn more about it.</span>
 		<div class="stats">
 			<img src="/images/poolyflip.gif" alt="PoolyFlip">
 			<span class="tvl">
@@ -282,6 +285,10 @@
 		text-align: center;
 	}
 
+	.info a {
+		color: var(--accent-color);
+	}
+
 	.stats {
 		display: flex;
 		align-items: center;
@@ -302,6 +309,9 @@
 	}
 
 	.inputs {
+		width: auto;
+		min-width: 60%;
+		margin: 1em 0;
 		background-color: var(--secondary-color);
 		border: 4px solid var(--accent-color);
 		border-radius: 2em;
