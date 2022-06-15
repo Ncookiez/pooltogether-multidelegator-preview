@@ -19,6 +19,15 @@
 		weeks: 4,
 		wallets: 1000
 	}
+	let maxPrizes = 2;
+	let prizeTiers = [
+		{ prize: 1000, num: 1 },
+		{ prize: 100, num: 3 },
+		{ prize: 50, num: 12 },
+		{ prize: 10, num: 48 },
+		{ prize: 5, num: 192 },
+		{ prize: 5, num: 768 }
+	];
 
 	// Calculation Reactive Variables:
 	$: potentialTVL = protocolTVL + input.depositAmount;
@@ -26,7 +35,7 @@
 	$: dailyOdds = 1 / (1 - (((potentialTVL - avgDelegation) / potentialTVL) ** dailyPrizeCount));
 	$: dailyWins = input.wallets / dailyOdds;
 	$: totalWins = dailyWins * (input.weeks * 7);
-	$: apr = fetchAPR(potentialTVL, avgDelegation);
+	$: apr = fetchAPR(prizeTiers, maxPrizes, potentialTVL, avgDelegation);
 	$: totalGains = (input.depositAmount * (apr / 100)) * (input.weeks / 52);
 
 	// Style Reactive Variables:
@@ -198,7 +207,7 @@
 				<span>total prize wins</span>
 			</span>
 			<span class="apr">
-				<span>With a simulated APR of</span>
+				<span>With an estimated APR of</span>
 				<span class="value">{formatNum(apr, 2)}%</span>
 				<span>no delegatee could complain</span>
 			</span>
