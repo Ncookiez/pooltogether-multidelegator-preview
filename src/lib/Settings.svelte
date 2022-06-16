@@ -13,7 +13,7 @@
 	export let dailyPrizeCount = 1024;
 	export let dailyPrizeWinnings = 7180;
 	const prizeNums = [1, 3, 12, 48, 192, 768, 3072];
-	let open = true;
+	let open = false;
 
 	// Reactive Prize Totals:
 	$: getTotalNumPrizes(prizeTiers);
