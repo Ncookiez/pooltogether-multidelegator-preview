@@ -6,10 +6,9 @@
 	import { fetchTVL } from '$lib/tvl';
 	import { fetchAPR } from '$lib/apr';
 	import { goto } from '$app/navigation';
+	import Settings from '$lib/Settings.svelte';
 
 	// Initializations & Exports:
-	const dailyPrizeCount = 1024;
-	const dailyPrizeWinnings = 7180;
 	const toolLink = 'https://tools.pooltogether.com/delegate';
 	const docsLink = 'https://docs.pooltogether.com/pooltogether/guides/deposit-delegator';
 	let protocolTVL = 0;
@@ -19,15 +18,10 @@
 		weeks: 4,
 		wallets: 1000
 	}
-	let maxPrizes = 2;
-	let prizeTiers = [
-		{ prize: 1000, num: 1 },
-		{ prize: 100, num: 3 },
-		{ prize: 50, num: 12 },
-		{ prize: 10, num: 48 },
-		{ prize: 5, num: 192 },
-		{ prize: 5, num: 768 }
-	];
+	let dailyPrizeCount: number;
+	let dailyPrizeWinnings: number;
+	let maxPrizes: number;
+	let prizeTiers: {prize: number, num: number}[];
 
 	// Calculation Reactive Variables:
 	$: potentialTVL = protocolTVL + input.depositAmount;
@@ -35,7 +29,7 @@
 	$: dailyOdds = 1 / (1 - (((potentialTVL - avgDelegation) / potentialTVL) ** dailyPrizeCount));
 	$: dailyWins = input.wallets / dailyOdds;
 	$: totalWins = dailyWins * (input.weeks * 7);
-	$: apr = fetchAPR(prizeTiers, maxPrizes, potentialTVL, avgDelegation);
+	$: apr = maxPrizes && prizeTiers && protocolTVL !== 0 ? fetchAPR(prizeTiers, maxPrizes, potentialTVL, avgDelegation) : 0;
 	$: totalGains = (input.depositAmount * (apr / 100)) * (input.weeks / 52);
 
 	// Style Reactive Variables:
@@ -218,6 +212,9 @@
 			</span>
 		</span>
 	</div>
+
+	<!-- Settings Component -->
+	<Settings bind:maxPrizes bind:prizeTiers bind:dailyPrizeCount bind:dailyPrizeWinnings />
 
 </section>
 
