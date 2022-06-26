@@ -106,8 +106,8 @@
 
 <!-- SvelteKit Dynamic Header -->
 <svelte:head>
-	<title>PoolTogether Multidelegator Calculator</title>
-	<meta name="description" content="A quick app to showcase some of the PoolTogether Multidelegator's potential." />
+	<title>PoolTogether Deposit Delegator Calculator</title>
+	<meta name="description" content="A quick app to showcase some of the PoolTogether Deposit Delegator's potential." />
 </svelte:head>
 
 <!-- Page Content -->
@@ -117,14 +117,14 @@
 	<div class="header">
 		<img src="/images/pooltogether-logo.svg" alt="PoolTogether Logo">
 		<h1>
-			<span>Multidelegator</span>
+			<span>Deposit Delegator</span>
 			<span>Calculator</span>
 		</h1>
 	</div>
 
 	<!-- Info Content -->
 	<div class="info">
-		<span>By using PoolTogether's Multidelegator, you can easily delegate to a small or large number of wallets with an amount of your choosing.</span>
+		<span>By using PoolTogether's Deposit Delegator, you can easily delegate to a small or large number of wallets with an amount of your choosing.</span>
 		<span>Every wallet you delegate to will have a chance of winning a prize of their own, while you still have complete control over your deposit.</span>
 		<span>Feel free to use our <a href="{toolLink}" target="_blank">deposit delegator app</a>, or <a href="{docsLink}" target="_blank">read our documentation</a> to learn more about it.</span>
 		<div class="stats">

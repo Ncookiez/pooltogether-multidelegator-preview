@@ -1,6 +1,6 @@
 {
-  "name": "PoolTogether Multidelegator Calculator",
-  "short_name": "pt-multidelegator-calculator",
+  "name": "PoolTogether Deposit Delegator Calculator",
+  "short_name": "pt-delegator-calculator",
   "background_color": "#2d0b5a",
   "display": "minimal-ui",
   "start_url": "/",
