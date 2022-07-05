@@ -6,22 +6,28 @@
 	import { fetchTVL } from '$lib/tvl';
 	import { fetchAPR } from '$lib/apr';
 	import { goto } from '$app/navigation';
+	import { fetchDelegationCost } from '$lib/gas';
 	import Settings from '$lib/Settings.svelte';
+
+	// Type Imports:
+	import type { UpperCaseChain } from 'weaverfi/dist/types';
 
 	// Initializations & Exports:
 	const toolLink = 'https://tools.pooltogether.com/delegate';
 	const docsLink = 'https://docs.pooltogether.com/pooltogether/guides/deposit-delegator';
 	let protocolTVL = 0;
 	let doneMounting = false;
-	let input = {
+	let input: { depositAmount: number, weeks: number, wallets: number, chain: UpperCaseChain } = {
 		depositAmount: 500000,
 		weeks: 4,
-		wallets: 1000
+		wallets: 1000,
+		chain: 'POLY'
 	}
 	let dailyPrizeCount: number;
 	let dailyPrizeWinnings: number;
 	let maxPrizes: number;
 	let prizeTiers: {prize: number, num: number}[];
+	let gasCosts = 0;
 
 	// Calculation Reactive Variables:
 	$: potentialTVL = protocolTVL + input.depositAmount;
@@ -31,6 +37,9 @@
 	$: totalWins = dailyWins * (input.weeks * 7);
 	$: apr = maxPrizes && prizeTiers && protocolTVL !== 0 ? fetchAPR(prizeTiers, maxPrizes, potentialTVL, avgDelegation) : 0;
 	$: totalGains = (input.depositAmount * (apr / 100)) * (input.weeks / 52);
+
+	// Reactive Gas Costs:
+	$: input.chain, getGasCosts();
 
 	// Style Reactive Variables:
 	$: depositWidth = getInputWidth(input.depositAmount);
@@ -74,14 +83,21 @@
 	}
 
 	// Function to update URL on input changes:
-	const syncURL = (input: { depositAmount: number, weeks: number, wallets: number }) => {
-		if(doneMounting && input.depositAmount && input.weeks && input.wallets) {
+	const syncURL = (input: { depositAmount: number, weeks: number, wallets: number, chain: UpperCaseChain }) => {
+		if(doneMounting && input.depositAmount && input.weeks && input.wallets && input.chain) {
 			let searchParams = new URLSearchParams(window.location.search);
     	searchParams.set('deposit', input.depositAmount.toString());
     	searchParams.set('weeks', input.weeks.toString());
     	searchParams.set('wallets', input.wallets.toString());
+    	searchParams.set('chain', input.chain);
 			goto(`?${searchParams.toString()}`, { noscroll: true, keepfocus: true });
 		}
+	}
+
+	// Function to get gas costs:
+	const getGasCosts = async () => {
+		gasCosts = 0;
+		gasCosts = await fetchDelegationCost(input.chain);
 	}
 
 	onMount(async () => {
@@ -93,6 +109,8 @@
 		if(urlWeeks) { input.weeks = parseInt(urlWeeks); }
 		let urlWallets = $page.url.searchParams.get('wallets');
 		if(urlWallets) { input.wallets = parseInt(urlWallets); }
+		let urlChain = $page.url.searchParams.get('chain');
+		if(urlChain) { input.chain = urlChain as UpperCaseChain; }
 		
 		// Fetching V4 TVL:
 		protocolTVL = await fetchTVL();
@@ -162,17 +180,16 @@
 			<input type="number" bind:value="{input.depositAmount}" style="width: {depositWidth}ch" title="This is {formatDollars(input.depositAmount)}, you probably typed it right :3">
 			<span>USDC for</span>
 			<input type="number" bind:value="{input.weeks}" style="width: {weeksWidth}ch">
-			{#if input.weeks === 1}
-				<span>week to</span>
-			{:else}
-				<span>weeks to</span>
-			{/if}
+			<span>week{input.weeks === 1 ? '' : 's'} to</span>
 			<input type="number" bind:value="{input.wallets}" style="width: {walletsWidth}ch">
-			{#if input.wallets === 1}
-				<span>wallet."</span>
-			{:else}
-				<span>different wallets."</span>
-			{/if}
+			<span>{input.wallets === 1 ? 'wallet' : 'different wallets'} on</span>
+			<select bind:value={input.chain}>
+				<option value="POLY">Polygon</option>
+				<option value="ETH">Ethereum</option>
+				<option value="AVAX">Avalanche</option>
+				<option value="OP">Optimism</option>
+			</select>
+			<span>"</span>
 		</span>
 	</div>
 
@@ -213,6 +230,14 @@
 		</span>
 	</div>
 
+	<!-- Gas Info -->
+	<div class="gas">
+		{#if gasCosts !== 0 && input.wallets > 0}
+			<img src="/images/gas.svg" alt="Gas">
+			<span>Gas fees for this delegation would cost approximately <strong>${(gasCosts * input.wallets).toLocaleString(undefined, { maximumFractionDigits: 2 })}</strong> based on current gas prices.</span>
+		{/if}
+	</div>
+
 	<!-- Settings Component -->
 	<Settings bind:maxPrizes bind:prizeTiers bind:dailyPrizeCount bind:dailyPrizeWinnings />
 
@@ -248,7 +273,7 @@
 		letter-spacing: 2px;
 	}
 
-	input {
+	input, select {
 		margin: 0 .3em;
 		padding: .3em;
 		font-family: 'Righteous', cursive;
@@ -256,17 +281,24 @@
 		background: transparent;
 		border: none;
 		border-bottom: 2px solid var(--accent-color);
-		text-align: center;
-		-moz-appearance: textfield;
 	}
 
-	input:focus {
+	input:focus, select:focus {
 		outline: none;
+	}
+
+	input {
+		text-align: center;
+		-moz-appearance: textfield;
 	}
 	
 	input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 		margin: 0;
 		-webkit-appearance: none;
+	}
+
+	option {
+		background: var(--secondary-color);
 	}
 
 	.header {
@@ -336,10 +368,6 @@
 		text-align: center;
 	}
 
-	.results {
-		margin-bottom: 10vh;
-	}
-
 	.resultItems {
 		display: flex;
 		flex-wrap: wrap;
@@ -350,6 +378,24 @@
 	.resultItems > span {
 		width: 30%;
 		margin: 1em;
+	}
+
+	div.gas {
+		display: flex;
+		align-items: center;
+		margin-top: 2em;
+		margin-bottom: 10vh;
+		font-size: 1.2em;
+	}
+
+	div.gas img {
+		width: 1em;
+		height: 1em;
+		margin-right: .5em;
+	}
+
+	div.gas strong {
+		color: var(--accent-color);
 	}
 
 	@media only screen and (max-width: 2000px) {
@@ -372,6 +418,13 @@
 		.stats > img {
 			display: none;
 		}
+		div.gas {
+			width: 60%;
+		}
+		div.gas > img {
+			width: 2em;
+			height: 2em;
+		}
 	}
 
 	@media only screen and (max-width: 850px) {
@@ -381,6 +434,9 @@
 		.header > h1 {
 			text-align: center;
 			margin: .5em;
+		}
+		div.gas {
+			width: 100%;
 		}
 	}
 

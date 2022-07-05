@@ -8,7 +8,7 @@ const ethTicket: Address = '0xdd4d117723C257CEe402285D3aCF218E9A8236E1';
 const polyTicket: Address = '0x6a304dFdb9f808741244b6bfEe65ca7B3b3A6076';
 const avaxTicket: Address = '0xB27f379C050f6eD0973A01667458af6eCeBc1d90';
 const decimals = 6;
-const ticketABI: ABI[] = [{ constant: true, inputs: [{ name: "_target", type: "uint64" }], name: "getTotalSupplyAt", outputs: [{ name: "", type: "uint256" }], type: "function" }];
+const ticketABI: ABI = [{ constant: true, inputs: [{ name: "_target", type: "uint64" }], name: "getTotalSupplyAt", outputs: [{ name: "", type: "uint256" }], type: "function" }];
 
 // Function to fetch PoolTogether V4 TVL:
 export const fetchTVL = async () => {

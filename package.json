@@ -1,6 +1,6 @@
 {
   "name": "pt-delegator-calculator",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "type": "module",
   "scripts": {
     "dev": "svelte-kit dev",
@@ -20,6 +20,6 @@
     "typescript": "~4.6.2"
   },
   "dependencies": {
-    "weaverfi": "^1.16.2"
+    "weaverfi": "^1.30.0"
   }
 }
