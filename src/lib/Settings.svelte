@@ -1,40 +1,58 @@
 <script lang="ts">
 
+	// Type Imports:
+	import type { UpperCaseChain } from 'weaverfi/dist/types';
+
 	// Initializations:
-	export let maxPrizes = 2;
-	export let prizeTiers = [
-		{ prize: 1000, num: 1 },
-		{ prize: 100, num: 3 },
-		{ prize: 50, num: 12 },
-		{ prize: 10, num: 48 },
-		{ prize: 5, num: 192 },
-		{ prize: 5, num: 768 }
+	export let chain: UpperCaseChain;
+	export let maxPrizes = 1;
+	export let prizeTiers: { prize: number, num: number }[] = [
+		{ prize: 1420, num: 1 },
+		{ prize: 20, num: 12 },
+		{ prize: 1, num: 3072 }
 	];
-	export let dailyPrizeCount = 1024;
-	export let dailyPrizeWinnings = 7180;
+	export let dailyPrizeCount = 3085;
+	export let dailyPrizeWinnings = 4732;
 	const prizeNums = [1, 3, 12, 48, 192, 768, 3072];
 	let open = false;
 
-	// Reactive Prize Totals:
-	$: getTotalNumPrizes(prizeTiers);
-	$: getTotalPrizes(prizeTiers);
+	// Default Prize Tiers:
+	const ethPrizeTiers: { prize: number, num: number }[] = [
+		{ prize: 1420, num: 1 },
+		{ prize: 1104, num: 3 }
+	];
+	const polyPrizeTiers: { prize: number, num: number }[] = [
+		{ prize: 1420, num: 1 },
+		{ prize: 20, num: 12 },
+		{ prize: 1, num: 3072 }
+	];
+	const avaxPrizeTiers: { prize: number, num: number }[] = [
+		{ prize: 1420, num: 1 },
+		{ prize: 17.25, num: 192 }
+	];
+	const opPrizeTiers: { prize: number, num: number }[] = [
+		{ prize: 1420, num: 1 },
+		{ prize: 69, num: 48 }
+	];
 
-	// Function to get total # of prizes:
-	const getTotalNumPrizes = (tiers: {prize: number, num: number}[]) => {
-		let sum = 0;
-		tiers.forEach(tier => {
-			sum += tier.num;
-		});
-		dailyPrizeCount = sum;
-	}
+	// Reactive Prize Variables:
+	$: prizeTiers = getPrizeTiers(chain);
+	$: dailyPrizeCount = prizeTiers.reduce((a, b) => a + b.num, 0);
+	$: dailyPrizeWinnings = prizeTiers.reduce((a, b) => a + (b.prize * b.num), 0);
 
-	// Function to get total prizes:
-	const getTotalPrizes = (tiers: {prize: number, num: number}[]) => {
-		let sum = 0;
-		tiers.forEach(tier => {
-			sum += tier.num * tier.prize;
-		});
-		dailyPrizeWinnings = sum;
+	// Function to get prize tiers:
+	const getPrizeTiers = (chain: UpperCaseChain) => {
+		if(chain === 'ETH') {
+			return ethPrizeTiers;
+		} else if(chain === 'POLY') {
+			return polyPrizeTiers;
+		} else if(chain === 'AVAX') {
+			return avaxPrizeTiers;
+		} else if(chain === 'OP') {
+			return opPrizeTiers;
+		} else {
+			return polyPrizeTiers;
+		}
 	}
 	
 </script>
@@ -46,6 +64,16 @@
 	<div class="cover" on:click={() => open = false}></div>
 	<div class="settingsModal">
 		<h3>Want to experiment with different prize settings?</h3>
+		<span class="chain">
+			<span>Editing</span>
+			<select bind:value={chain}>
+				<option value="ETH">Ethereum</option>
+				<option value="POLY">Polygon</option>
+				<option value="AVAX">Avalanche</option>
+				<option value="OP">Optimism</option>
+			</select>
+			<span>settings.</span>
+		</span>
 		<span class="maxDailyPrizes">Maximum of <input type="number" bind:value={maxPrizes}> prize{maxPrizes === 1 ? '' : 's'} a day, per wallet!</span>
 		<span class="prizeTiers">
 			<span class="headers">

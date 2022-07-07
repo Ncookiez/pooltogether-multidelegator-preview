@@ -17,16 +17,16 @@
 	const docsLink = 'https://docs.pooltogether.com/pooltogether/guides/deposit-delegator';
 	let protocolTVL = 0;
 	let doneMounting = false;
-	let input: { depositAmount: number, weeks: number, wallets: number, chain: UpperCaseChain } = {
+	let input: { depositAmount: number, weeks: number, wallets: number } = {
 		depositAmount: 500000,
 		weeks: 4,
-		wallets: 1000,
-		chain: 'POLY'
+		wallets: 1000
 	}
+	let chain: UpperCaseChain = 'POLY';
 	let dailyPrizeCount: number;
 	let dailyPrizeWinnings: number;
 	let maxPrizes: number;
-	let prizeTiers: {prize: number, num: number}[];
+	let prizeTiers: { prize: number, num: number }[];
 	let gasCosts = 0;
 
 	// Calculation Reactive Variables:
@@ -39,7 +39,7 @@
 	$: totalGains = (input.depositAmount * (apr / 100)) * (input.weeks / 52);
 
 	// Reactive Gas Costs:
-	$: input.chain, getGasCosts();
+	$: chain, getGasCosts();
 
 	// Style Reactive Variables:
 	$: depositWidth = getInputWidth(input.depositAmount);
@@ -47,7 +47,7 @@
 	$: walletsWidth = getInputWidth(input.wallets);
 
 	// URL Reactivity:
-	$: syncURL(input);
+	$: syncURL(input, chain);
 
 	// Function to format dollars:
 	const formatDollars = (num: number) => {
@@ -83,13 +83,13 @@
 	}
 
 	// Function to update URL on input changes:
-	const syncURL = (input: { depositAmount: number, weeks: number, wallets: number, chain: UpperCaseChain }) => {
-		if(doneMounting && input.depositAmount && input.weeks && input.wallets && input.chain) {
+	const syncURL = (input: { depositAmount: number, weeks: number, wallets: number }, chain: UpperCaseChain) => {
+		if(doneMounting && input.depositAmount && input.weeks && input.wallets) {
 			let searchParams = new URLSearchParams(window.location.search);
     	searchParams.set('deposit', input.depositAmount.toString());
     	searchParams.set('weeks', input.weeks.toString());
     	searchParams.set('wallets', input.wallets.toString());
-    	searchParams.set('chain', input.chain);
+    	searchParams.set('chain', chain);
 			goto(`?${searchParams.toString()}`, { noscroll: true, keepfocus: true });
 		}
 	}
@@ -97,7 +97,7 @@
 	// Function to get gas costs:
 	const getGasCosts = async () => {
 		gasCosts = 0;
-		gasCosts = await fetchDelegationCost(input.chain);
+		gasCosts = await fetchDelegationCost(chain);
 	}
 
 	onMount(async () => {
@@ -110,7 +110,7 @@
 		let urlWallets = $page.url.searchParams.get('wallets');
 		if(urlWallets) { input.wallets = parseInt(urlWallets); }
 		let urlChain = $page.url.searchParams.get('chain');
-		if(urlChain) { input.chain = urlChain as UpperCaseChain; }
+		if(urlChain) { chain = urlChain as UpperCaseChain; }
 		
 		// Fetching V4 TVL:
 		protocolTVL = await fetchTVL();
@@ -183,7 +183,7 @@
 			<span>week{input.weeks === 1 ? '' : 's'} to</span>
 			<input type="number" bind:value="{input.wallets}" style="width: {walletsWidth}ch">
 			<span>{input.wallets === 1 ? 'wallet' : 'different wallets'} on</span>
-			<select bind:value={input.chain}>
+			<select bind:value={chain}>
 				<option value="POLY">Polygon</option>
 				<option value="ETH">Ethereum</option>
 				<option value="AVAX">Avalanche</option>
@@ -239,7 +239,7 @@
 	</div>
 
 	<!-- Settings Component -->
-	<Settings bind:maxPrizes bind:prizeTiers bind:dailyPrizeCount bind:dailyPrizeWinnings />
+	<Settings bind:maxPrizes bind:prizeTiers bind:dailyPrizeCount bind:dailyPrizeWinnings bind:chain />
 
 </section>
 
