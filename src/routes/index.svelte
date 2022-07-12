@@ -15,6 +15,7 @@
 	// Initializations & Exports:
 	const toolLink = 'https://tools.pooltogether.com/delegate';
 	const docsLink = 'https://docs.pooltogether.com/pooltogether/guides/deposit-delegator';
+	const baseDepositLink = 'https://app.pooltogether.com/deposit';
 	let protocolTVL = 0;
 	let doneMounting = false;
 	let input: { depositAmount: number, weeks: number, wallets: number } = {
@@ -37,6 +38,9 @@
 	$: totalWins = dailyWins * (input.weeks * 7);
 	$: apr = maxPrizes && prizeTiers && protocolTVL !== 0 ? fetchAPR(prizeTiers, maxPrizes, potentialTVL, avgDelegation) : 0;
 	$: totalGains = (input.depositAmount * (apr / 100)) * (input.weeks / 52);
+
+	// Reactive Deposit link:
+	$: depositLink = getDepositLink(chain, input.depositAmount);
 
 	// Reactive Gas Costs:
 	$: chain, getGasCosts();
@@ -92,6 +96,19 @@
     	searchParams.set('chain', chain);
 			goto(`?${searchParams.toString()}`, { noscroll: true, keepfocus: true });
 		}
+	}
+
+	// Function to get dynamic deposit link:
+	const getDepositLink = (chain: UpperCaseChain, depositAmount: number) => {
+		let networkName = 'polygon';
+		if(chain === 'ETH') {
+			networkName = 'mainnet';
+		} else if(chain === 'AVAX') {
+			networkName = 'avalanche';
+		} else if(chain === 'OP') {
+			networkName = 'optimism';
+		}
+		return `${baseDepositLink}?network=${networkName}&amountToDeposit=${depositAmount}`;
 	}
 
 	// Function to get gas costs:
@@ -230,6 +247,15 @@
 		</span>
 	</div>
 
+	<!-- Call To Action -->
+	<div class="cta">
+		<a class="long" href="{depositLink}" target="__blank">Deposit Into PoolTogether</a>
+		<a class="short" href="{depositLink}" target="__blank">Deposit</a>
+		<span class="arrow">➔</span>
+		<a class="long" href="{toolLink}" target="_blank">Delegate Your Balance</a>
+		<a class="short" href="{toolLink}" target="_blank">Delegate</a>
+	</div>
+
 	<!-- Gas Info -->
 	<div class="gas">
 		{#if gasCosts !== 0 && input.wallets > 0}
@@ -323,7 +349,7 @@
 		text-align: center;
 	}
 
-	.info a {
+	a {
 		color: var(--accent-color);
 	}
 
@@ -380,12 +406,44 @@
 		margin: 1em;
 	}
 
+	div.cta {
+		display: flex;
+		align-items: center;
+		gap: 1em;
+		margin-top: 2em;
+		margin-bottom: .5em;
+		font-size: 1.1em;
+	}
+
+	div.cta > a {
+		padding: .2em 1em;
+		color: inherit;
+		background-color: var(--secondary-color);
+		border: 2px solid var(--accent-color);
+		border-radius: .8em;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	div.cta > a.short {
+		display: none;
+	}
+
+	div.cta > a:hover {
+		box-shadow: 0px 0px 10px var(--accent-color);
+	}
+
+	div.cta > span {
+		font-size: 1.2em;
+		user-select: none;
+	}
+
 	div.gas {
 		display: flex;
 		align-items: center;
-		margin-top: 2em;
+		margin-top: .5em;
 		margin-bottom: 10vh;
-		font-size: 1.2em;
+		font-size: 1.1em;
 	}
 
 	div.gas img {
@@ -434,6 +492,12 @@
 		.header > h1 {
 			text-align: center;
 			margin: .5em;
+		}
+		div.cta > a.long {
+			display: none;
+		}
+		div.cta > a.short {
+			display: block;
 		}
 		div.gas {
 			width: 100%;
