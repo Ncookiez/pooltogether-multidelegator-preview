@@ -108,7 +108,7 @@
 		} else if(chain === 'OP') {
 			networkName = 'optimism';
 		}
-		return `${baseDepositLink}?network=${networkName}&amountToDeposit=${depositAmount}`;
+		return `${baseDepositLink}?network=${networkName}&amountToDeposit=${depositAmount}&utm_source=prizecalc&utm_campaign=ncookieisawesome&utm_medium=referral`;
 	}
 
 	// Function to get gas costs:
