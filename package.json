@@ -1,25 +1,28 @@
 {
-  "name": "pt-delegator-calculator",
-  "version": "1.7.2",
-  "type": "module",
-  "scripts": {
-    "dev": "svelte-kit dev",
-    "build": "svelte-kit build",
-    "preview": "svelte-kit preview",
-    "prepare": "svelte-kit sync",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
-  },
-  "devDependencies": {
-    "@sveltejs/adapter-netlify": "1.0.0-next.65",
-    "@sveltejs/kit": "1.0.0-next.350",
-    "@types/cookie": "^0.4.1",
-    "svelte": "^3.46.0",
-    "svelte-check": "^2.2.6",
-    "svelte-preprocess": "^4.10.1",
-    "tslib": "^2.3.1",
-    "typescript": "~4.6.2"
-  },
+	"name": "pt-delegator-calculator",
+	"version": "1.8.0",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"package": "svelte-kit package",
+		"preview": "vite preview",
+		"prepare": "svelte-kit sync",
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-netlify": "next",
+		"@sveltejs/kit": "next",
+		"svelte": "^3.44.0",
+		"svelte-check": "^2.7.1",
+		"svelte-preprocess": "^4.10.6",
+		"tslib": "^2.3.1",
+		"typescript": "^4.7.4",
+		"vite": "^3.0.0"
+	},
   "dependencies": {
-    "weaverfi": "^1.30.2"
+    "weaverfi": "^1.30.3"
   }
 }
