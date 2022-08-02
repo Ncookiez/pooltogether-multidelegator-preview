@@ -7,39 +7,38 @@
 	export let chain: UpperCaseChain;
 	export let maxPrizes = 1;
 	export let prizeTiers: { prize: number, num: number }[] = [
-	    { prize: 1010, num: 1 },
-	    { prize: 20, num: 12 },
-	    { prize: 10, num: 48},
-	    { prize: 1, num: 3072 }
+		{ prize: 1010, num: 1 },
+		{ prize: 20, num: 12 },
+		{ prize: 10, num: 48},
+		{ prize: 1, num: 3072 }
 	];
-	export let dailyPrizeCount = 3085;
-	export let dailyPrizeWinnings = 4732;
+	export let dailyPrizeCount = 3133;
+	export let dailyPrizeWinnings = 4802;
 	const prizeNums = [1, 3, 12, 48, 192, 768, 3072];
 	let open = false;
 
 	// Default Prize Tiers:
 	const ethPrizeTiers: { prize: number, num: number }[] = [
-	    { prize: 1010, num: 1 },
-	    { prize: 316, num: 12 }
+		{ prize: 1010, num: 1 },
+		{ prize: 316, num: 12 }
 	];
 	const polyPrizeTiers: { prize: number, num: number }[] = [
-	    { prize: 1010, num: 1 },
-	    { prize: 20, num: 12 },
-	    { prize: 10, num: 48},
-	    { prize: 1, num: 3072 }
+		{ prize: 1010, num: 1 },
+		{ prize: 20, num: 12 },
+		{ prize: 10, num: 48},
+		{ prize: 1, num: 3072 }
 	];
 	const avaxPrizeTiers: { prize: number, num: number }[] = [
-	    { prize: 1010, num: 1 },
-	    { prize: 20, num: 12 },
-	    { prize: 5, num: 48},
-	    { prize: 17.25, num: 192 }
+		{ prize: 1010, num: 1 },
+		{ prize: 20, num: 12 },
+		{ prize: 5, num: 48},
+		{ prize: 17.25, num: 192 }
 	];
 	const opPrizeTiers: { prize: number, num: number }[] = [
-	    { prize: 1010, num: 1 },
-	    { prize: 20, num: 12 },
-	    { prize: 5, num: 48},
-	    { prize: 17.25, num: 192 }
-
+		{ prize: 1010, num: 1 },
+		{ prize: 20, num: 12 },
+		{ prize: 5, num: 48},
+		{ prize: 17.25, num: 192 }
 	];
 	// Reactive Prize Variables:
 	$: prizeTiers = getPrizeTiers(chain);
