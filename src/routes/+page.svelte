@@ -10,7 +10,7 @@
 	import Settings from '$lib/Settings.svelte';
 
 	// Type Imports:
-	import type { UpperCaseChain } from 'weaverfi/dist/types';
+	import type { Chain } from 'weaverfi/dist/types';
 
 	// Initializations & Exports:
 	const toolLink = 'https://tools.pooltogether.com/delegate';
@@ -23,7 +23,7 @@
 		weeks: 4,
 		wallets: 1000
 	}
-	let chain: UpperCaseChain = 'POLY';
+	let chain: Chain = 'poly';
 	let dailyPrizeCount: number;
 	let dailyPrizeWinnings: number;
 	let maxPrizes: number;
@@ -87,7 +87,7 @@
 	}
 
 	// Function to update URL on input changes:
-	const syncURL = (input: { depositAmount: number, weeks: number, wallets: number }, chain: UpperCaseChain) => {
+	const syncURL = (input: { depositAmount: number, weeks: number, wallets: number }, chain: Chain) => {
 		if(doneMounting && input.depositAmount && input.weeks && input.wallets) {
 			let searchParams = new URLSearchParams(window.location.search);
     	searchParams.set('deposit', input.depositAmount.toString());
@@ -99,13 +99,13 @@
 	}
 
 	// Function to get dynamic deposit link:
-	const getDepositLink = (chain: UpperCaseChain, depositAmount: number) => {
+	const getDepositLink = (chain: Chain, depositAmount: number) => {
 		let networkName = 'polygon';
-		if(chain === 'ETH') {
+		if(chain === 'eth') {
 			networkName = 'mainnet';
-		} else if(chain === 'AVAX') {
+		} else if(chain === 'avax') {
 			networkName = 'avalanche';
-		} else if(chain === 'OP') {
+		} else if(chain === 'op') {
 			networkName = 'optimism';
 		}
 		return `${baseDepositLink}?network=${networkName}&amountToDeposit=${depositAmount}&utm_source=prizecalc&utm_campaign=ncookieisawesome&utm_medium=referral`;
@@ -127,7 +127,7 @@
 		let urlWallets = $page.url.searchParams.get('wallets');
 		if(urlWallets) { input.wallets = parseInt(urlWallets); }
 		let urlChain = $page.url.searchParams.get('chain');
-		if(urlChain) { chain = urlChain as UpperCaseChain; }
+		if(urlChain) { chain = urlChain.toLowerCase() as Chain; }
 		
 		// Fetching V4 TVL:
 		protocolTVL = await fetchTVL();
@@ -161,7 +161,7 @@
 	<div class="info">
 		<span>By using PoolTogether's Deposit Delegator, you can easily delegate to a small or large number of wallets with an amount of your choosing.</span>
 		<span>Every wallet you delegate to will have a chance of winning a prize of their own, while you still have complete control over your deposit.</span>
-		<span>Feel free to use our <a href="{toolLink}" target="_blank">deposit delegator app</a>, or <a href="{docsLink}" target="_blank">read our documentation</a> to learn more about it.</span>
+		<span>Feel free to use our <a href="{toolLink}" target="_blank" rel="noreferrer">deposit delegator app</a>, or <a href="{docsLink}" target="_blank" rel="noreferrer">read our documentation</a> to learn more about it.</span>
 		<div class="stats">
 			<img src="/images/poolyflip.gif" alt="PoolyFlip">
 			<span class="tvl">
@@ -201,10 +201,10 @@
 			<input type="number" bind:value="{input.wallets}" style="width: {walletsWidth}ch">
 			<span>{input.wallets === 1 ? 'wallet' : 'different wallets'} on</span>
 			<select bind:value={chain}>
-				<option value="POLY">Polygon</option>
-				<option value="ETH">Ethereum</option>
-				<option value="AVAX">Avalanche</option>
-				<option value="OP">Optimism</option>
+				<option value="poly">Polygon</option>
+				<option value="eth">Ethereum</option>
+				<option value="avax">Avalanche</option>
+				<option value="op">Optimism</option>
 			</select>
 			<span>"</span>
 		</span>
@@ -252,8 +252,8 @@
 		<a class="long" href="{depositLink}" target="__blank">Deposit Into PoolTogether</a>
 		<a class="short" href="{depositLink}" target="__blank">Deposit</a>
 		<span class="arrow">➔</span>
-		<a class="long" href="{toolLink}" target="_blank">Delegate Your Balance</a>
-		<a class="short" href="{toolLink}" target="_blank">Delegate</a>
+		<a class="long" href="{toolLink}" target="_blank" rel="noreferrer">Delegate Your Balance</a>
+		<a class="short" href="{toolLink}" target="_blank" rel="noreferrer">Delegate</a>
 	</div>
 
 	<!-- Gas Info -->

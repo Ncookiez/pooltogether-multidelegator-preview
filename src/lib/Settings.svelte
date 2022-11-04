@@ -1,16 +1,20 @@
 <script lang="ts">
 
 	// Type Imports:
-	import type { UpperCaseChain } from 'weaverfi/dist/types';
+	import type { Chain } from 'weaverfi/dist/types';
 
 	// Initializations:
-	export let chain: UpperCaseChain;
+	export let chain: Chain;
 	export let maxPrizes = 1;
 	export let prizeTiers: { prize: number, num: number }[] = [
-		{ prize: 1000, num: 1 },
+		{ prize: 200, num: 1 },
+		{ prize: 20, num: 2 },
+		{ prize: 20, num: 4 },
+		{ prize: 1, num: 8 },
+		{ prize: 1, num: 32 },
 		{ prize: 1, num: 128 },
-		{ prize: 1, num: 1024 },
-		{ prize: 1, num: 2048 }
+		{ prize: 1, num: 512 },
+		{ prize: 0.5, num: 1024 }
 	];
 	export let dailyPrizeCount = 3201;
 	export let dailyPrizeWinnings = 4200;
@@ -19,24 +23,36 @@
 
 	// Default Prize Tiers:
 	const ethPrizeTiers: { prize: number, num: number }[] = [
-		{ prize: 1000, num: 1 },
-		{ prize: 200, num: 16 }
+		{ prize: 200, num: 1 },
+		{ prize: 164, num: 8 }
 	];
 	const polyPrizeTiers: { prize: number, num: number }[] = [
-		{ prize: 1000, num: 1 },
+		{ prize: 200, num: 1 },
+		{ prize: 20, num: 2 },
+		{ prize: 20, num: 4 },
+		{ prize: 1, num: 8 },
+		{ prize: 1, num: 32 },
 		{ prize: 1, num: 128 },
-		{ prize: 1, num: 1024 },
-		{ prize: 1, num: 2048 }
+		{ prize: 1, num: 512 },
+		{ prize: 0.5, num: 1024 }
 	];
 	const avaxPrizeTiers: { prize: number, num: number }[] = [
-		{ prize: 1000, num: 1 },
-		{ prize: 20, num: 32 },
-		{ prize: 5, num: 512 }
+		{ prize: 200, num: 1 },
+		{ prize: 50, num: 4 },
+		{ prize: 5, num: 8 },
+		{ prize: 5, num: 16 },
+		{ prize: 5, num: 32 },
+		{ prize: 5, num: 64 },
+		{ prize: 2, num: 256 }
 	];
 	const opPrizeTiers: { prize: number, num: number }[] = [
-		{ prize: 1000, num: 1 },
-		{ prize: 20, num: 32 },
-		{ prize: 5, num: 512 }
+		{ prize: 200, num: 1 },
+		{ prize: 50, num: 4 },
+		{ prize: 5, num: 8 },
+		{ prize: 5, num: 16 },
+		{ prize: 5, num: 32 },
+		{ prize: 5, num: 64 },
+		{ prize: 2, num: 256 }
 	];
 	// Reactive Prize Variables:
 	$: prizeTiers = getPrizeTiers(chain);
@@ -44,14 +60,14 @@
 	$: dailyPrizeWinnings = prizeTiers.reduce((a, b) => a + (b.prize * b.num), 0);
 
 	// Function to get prize tiers:
-	const getPrizeTiers = (chain: UpperCaseChain) => {
-		if(chain === 'ETH') {
+	const getPrizeTiers = (chain: Chain) => {
+		if(chain === 'eth') {
 			return ethPrizeTiers;
-		} else if(chain === 'POLY') {
+		} else if(chain === 'poly') {
 			return polyPrizeTiers;
-		} else if(chain === 'AVAX') {
+		} else if(chain === 'avax') {
 			return avaxPrizeTiers;
-		} else if(chain === 'OP') {
+		} else if(chain === 'op') {
 			return opPrizeTiers;
 		} else {
 			return polyPrizeTiers;
@@ -64,16 +80,16 @@
 
 <!-- Settings Modal -->
 {#if open}
-	<div class="cover" on:click={() => open = false}></div>
+	<div class="cover" on:click={() => open = false} on:keydown={() => open = false}></div>
 	<div class="settingsModal">
 		<h3>Want to experiment with different prize settings?</h3>
 		<span class="chain">
 			<span>Editing</span>
 			<select bind:value={chain}>
-				<option value="ETH">Ethereum</option>
-				<option value="POLY">Polygon</option>
-				<option value="AVAX">Avalanche</option>
-				<option value="OP">Optimism</option>
+				<option value="eth">Ethereum</option>
+				<option value="poly">Polygon</option>
+				<option value="avax">Avalanche</option>
+				<option value="op">Optimism</option>
 			</select>
 			<span>settings.</span>
 		</span>
@@ -94,15 +110,15 @@
 				</span>
 			{/each}
 			<span class="buttons">
-				<span class="addTier" on:click={() => prizeTiers = [...prizeTiers, { prize: 0, num: 1 }]}><strong>+</strong> Add Row</span>
-				<span class="removeTier" on:click={() => prizeTiers = [...prizeTiers.slice(0, prizeTiers.length - 1)]}><strong>-</strong> Remove Row</span>
+				<span class="addTier" on:click={() => prizeTiers = [...prizeTiers, { prize: 0, num: 1 }]} on:keydown={() => prizeTiers = [...prizeTiers, { prize: 0, num: 1 }]}><strong>+</strong> Add Row</span>
+				<span class="removeTier" on:click={() => prizeTiers = [...prizeTiers.slice(0, prizeTiers.length - 1)]} on:keydown={() => prizeTiers = [...prizeTiers.slice(0, prizeTiers.length - 1)]}><strong>-</strong> Remove Row</span>
 			</span>
 		</span>
 	</div>
 {/if}
 
 <!-- Settings Button -->
-<div class="settingsButton" on:click={() => open = !open}>
+<div class="settingsButton" on:click={() => open = !open} on:keydown={() => open = !open}>
 	<img src="/images/settings.svg" alt="Settings">
 </div>
 
