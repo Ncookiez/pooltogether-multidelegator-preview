@@ -19,7 +19,8 @@
 		{ prize: 10, num: 512 }
 	];
 	export let dpr: number = 0;
-	const prizeNums = [1, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192];
+	export let totalPrize: number = 0;
+	const prizeNums = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192];
 	let open = false;
 
 	// Default Prize Tiers:
@@ -78,6 +79,7 @@
 	// Reactive Prize Variables:
 	$: prizeTiers = getPrizeTiers(chain);
 	$: dpr = getDPR(chain);
+	$: totalPrize = getTotalPrize(chain);
 
 	// Function to get prize tiers:
 	const getPrizeTiers = (chain: Chain) => {
@@ -102,6 +104,19 @@
 			return avaxDPR;
 		} else {
 			return opDPR;
+		}
+	}
+
+	// Function to get total prize value of one draw:
+	const getTotalPrize = (chain: Chain) => {
+		if(chain === 'eth') {
+			return ethPrizeTiers.reduce((a, b) => a + (b.prize * b.num), 0);
+		} else if(chain === 'poly') {
+			return polyPrizeTiers.reduce((a, b) => a + (b.prize * b.num), 0);
+		} else if(chain === 'avax') {
+			return avaxPrizeTiers.reduce((a, b) => a + (b.prize * b.num), 0);
+		} else {
+			return opPrizeTiers.reduce((a, b) => a + (b.prize * b.num), 0);
 		}
 	}
 	
