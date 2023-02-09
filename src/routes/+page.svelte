@@ -46,7 +46,7 @@
 	$: dailyOdds = 1 / (1 - (((protocolTVL.total - avgDelegation) / protocolTVL.total) ** dailyPrizeCount));
 	$: dailyWins = input.wallets / dailyOdds;
 	$: totalWins = dailyWins * (input.weeks * 7);
-	$: apr = maxPrizes && prizeTiers && prizeChances && protocolTVL.total !== 0 ? fetchAPR(prizeTiers, prizeChances, maxPrizes, protocolTVL.total, avgDelegation) : 0;
+	$: apr = maxPrizes && prizeTiers && prizeChances && protocolTVL.total !== 0 ? fetchAPR(prizeTiers, dprMultiplier, maxPrizes, protocolTVL.total, avgDelegation) : 0;
 	$: totalGains = (input.depositAmount * (apr / 100)) * (input.weeks / 52);
 
 	// Reactive Deposit link:
