@@ -1,6 +1,6 @@
 
 // Function fetch estimated prize APR:
-export const fetchAPR = (prizeTiers: {prize: number, num: number}[], maxPrizes: number, tvl: number, depositAmount: number) => {
+export const fetchAPR = (prizeTiers: {prize: number, num: number}[], dprMultiplier: number, maxPrizes: number, tvl: number, depositAmount: number) => {
 
   // Initializations:
   let dailyPrizeCount = 0;
@@ -13,7 +13,7 @@ export const fetchAPR = (prizeTiers: {prize: number, num: number}[], maxPrizes: 
   });
 
   // Finding Daily Winning Probability:
-  let dailyWinProbability = (1 / (tvl / dailyPrizeCount)) * depositAmount;
+  let dailyWinProbability = (1 / (tvl / dailyPrizeCount)) * depositAmount * dprMultiplier;
 
   // Calculating Daily Winnings:
   prizeTiers.forEach(tier => {

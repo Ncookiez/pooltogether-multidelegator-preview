@@ -5,36 +5,81 @@
 
 	// Initializations:
 	export let chain: Chain;
-	export let maxPrizes = 1;
+	export let maxPrizes: number = 1;
 	export let prizeTiers: { prize: number, num: number }[] = [
-		{ prize: 500, num: 1 },
-		{ prize: 0.5, num: 2048 }
+		{ prize: 5000, num: 1 },
+		{ prize: 20, num: 1 },
+		{ prize: 50, num: 2 },
+		{ prize: 20, num: 8 },
+		{ prize: 100, num: 16 },
+		{ prize: 50, num: 32 },
+		{ prize: 50, num: 64 },
+		{ prize: 10, num: 128 },
+		{ prize: 20, num: 256 },
+		{ prize: 10, num: 512 }
 	];
-	export let dailyPrizeCount = 3201;
-	export let dailyPrizeWinnings = 4200;
-	const prizeNums = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096];
+	export let dpr: number = 0;
+	export let totalPrize: number = 0;
+	const prizeNums = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192];
 	let open = false;
 
 	// Default Prize Tiers:
 	const ethPrizeTiers: { prize: number, num: number }[] = [
-		{ prize: 1524, num: 1 }
+		{ prize: 5000, num: 1 },
+		{ prize: 100, num: 2 },
+		{ prize: 100, num: 4 },
+		{ prize: 100, num: 16 },
+		{ prize: 100, num: 32 },
+		{ prize: 100, num: 128 }
 	];
 	const polyPrizeTiers: { prize: number, num: number }[] = [
-		{ prize: 500, num: 1 },
-		{ prize: 0.5, num: 2048 }
+		{ prize: 5000, num: 1 },
+		{ prize: 10, num: 4 },
+		{ prize: 50, num: 8 },
+		{ prize: 50, num: 16 },
+		{ prize: 10, num: 32 },
+		{ prize: 10, num: 64 },
+		{ prize: 1, num: 128 },
+		{ prize: 10, num: 256 },
+		{ prize: 1, num: 1024 },
+		{ prize: 1, num: 4096 },
+		{ prize: 1, num: 8192 }
 	];
 	const avaxPrizeTiers: { prize: number, num: number }[] = [
-		{ prize: 500, num: 1 },
-		{ prize: 2, num: 512 }
+		{ prize: 5000, num: 1 },
+		{ prize: 20, num: 1 },
+		{ prize: 50, num: 2 },
+		{ prize: 20, num: 8 },
+		{ prize: 100, num: 16 },
+		{ prize: 50, num: 32 },
+		{ prize: 50, num: 64 },
+		{ prize: 10, num: 128 },
+		{ prize: 20, num: 256 },
+		{ prize: 10, num: 512 }
 	];
 	const opPrizeTiers: { prize: number, num: number }[] = [
-		{ prize: 500, num: 1 },
-		{ prize: 2, num: 512 }
+		{ prize: 5000, num: 1 },
+		{ prize: 20, num: 1 },
+		{ prize: 50, num: 2 },
+		{ prize: 20, num: 8 },
+		{ prize: 100, num: 16 },
+		{ prize: 50, num: 32 },
+		{ prize: 50, num: 64 },
+		{ prize: 10, num: 128 },
+		{ prize: 20, num: 256 },
+		{ prize: 10, num: 512 }
 	];
+
+	// Default DPRs:
+	const ethDPR = 0.0083506;
+	const polyDPR = 0.0046552;
+	const avaxDPR = 0.0054230;
+	const opDPR = 0.0015837;
+
 	// Reactive Prize Variables:
 	$: prizeTiers = getPrizeTiers(chain);
-	$: dailyPrizeCount = prizeTiers.reduce((a, b) => a + b.num, 0);
-	$: dailyPrizeWinnings = prizeTiers.reduce((a, b) => a + (b.prize * b.num), 0);
+	$: dpr = getDPR(chain);
+	$: totalPrize = getTotalPrize(chain);
 
 	// Function to get prize tiers:
 	const getPrizeTiers = (chain: Chain) => {
@@ -44,10 +89,34 @@
 			return polyPrizeTiers;
 		} else if(chain === 'avax') {
 			return avaxPrizeTiers;
-		} else if(chain === 'op') {
-			return opPrizeTiers;
 		} else {
-			return polyPrizeTiers;
+			return opPrizeTiers;
+		}
+	}
+
+	// Function to get DPR values:
+	const getDPR = (chain: Chain) => {
+		if(chain === 'eth') {
+			return ethDPR;
+		} else if(chain === 'poly') {
+			return polyDPR;
+		} else if(chain === 'avax') {
+			return avaxDPR;
+		} else {
+			return opDPR;
+		}
+	}
+
+	// Function to get total prize value of one draw:
+	const getTotalPrize = (chain: Chain) => {
+		if(chain === 'eth') {
+			return ethPrizeTiers.reduce((a, b) => a + (b.prize * b.num), 0);
+		} else if(chain === 'poly') {
+			return polyPrizeTiers.reduce((a, b) => a + (b.prize * b.num), 0);
+		} else if(chain === 'avax') {
+			return avaxPrizeTiers.reduce((a, b) => a + (b.prize * b.num), 0);
+		} else {
+			return opPrizeTiers.reduce((a, b) => a + (b.prize * b.num), 0);
 		}
 	}
 	
@@ -71,6 +140,7 @@
 			<span>settings.</span>
 		</span>
 		<span class="maxDailyPrizes">Maximum of <input type="number" bind:value={maxPrizes}> prize{maxPrizes === 1 ? '' : 's'} a day, per wallet!</span>
+		<span class="dpr">DPR of <input type="number" bind:value={dpr}>%</span>
 		<span class="prizeTiers">
 			<span class="headers">
 				<span><strong># of Prizes</strong></span>
@@ -118,6 +188,7 @@
 		border-bottom: 2px solid var(--accent-color);
 		text-align: center;
 		-moz-appearance: textfield;
+		appearance: textfield;
 	}
 
 	input:focus {
@@ -156,6 +227,10 @@
 	
 	.settingsModal .maxDailyPrizes input {
 		width: 4ch;
+	}
+
+	.settingsModal .dpr input {
+		width: 10ch;
 	}
 
 	.settingsModal .prizeTiers {

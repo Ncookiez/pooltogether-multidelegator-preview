@@ -7,36 +7,46 @@
 	import { fetchAPR } from '$lib/apr';
 	import { goto } from '$app/navigation';
 	import { fetchDelegationCost } from '$lib/gas';
+  import { calculateDprMultiplier } from '$lib/dpr';
 	import Settings from '$lib/Settings.svelte';
 
 	// Type Imports:
 	import type { Chain } from 'weaverfi/dist/types';
 
-	// Initializations & Exports:
+	// Initializations:
 	const toolLink = 'https://tools.pooltogether.com/delegate';
 	const docsLink = 'https://docs.pooltogether.com/pooltogether/guides/deposit-delegator';
 	const baseDepositLink = 'https://app.pooltogether.com/deposit';
-	let protocolTVL = 0;
+	let protocolTVL: { eth: number, poly: number, avax: number, op: number, total: number } = {
+		eth: 0,
+		poly: 0,
+		avax: 0,
+		op: 0,
+		total: 0
+	};
 	let doneMounting = false;
 	let input: { depositAmount: number, weeks: number, wallets: number } = {
 		depositAmount: 500000,
 		weeks: 4,
-		wallets: 1000
+		wallets: 100
 	}
-	let chain: Chain = 'poly';
-	let dailyPrizeCount: number;
-	let dailyPrizeWinnings: number;
-	let maxPrizes: number;
-	let prizeTiers: { prize: number, num: number }[];
+	let chain: Chain = 'op';
+	let dpr: number = 0;
+	let maxPrizes: number = 1;
+	let totalPrize: number = 0;
+	let prizeTiers: { prize: number, num: number }[] = [];
 	let gasCosts = 0;
 
 	// Calculation Reactive Variables:
-	$: potentialTVL = protocolTVL + input.depositAmount;
+	$: chainTVL = getChainTVL(chain, protocolTVL);
+	$: dprMultiplier = calculateDprMultiplier(dpr, chainTVL, totalPrize);
+	$: prizeChances = prizeTiers.map(tier => tier.num * dprMultiplier);
+	$: dailyPrizeCount = prizeChances.reduce((a, b) => a + b, 0);
 	$: avgDelegation = input.depositAmount / (input.wallets || 1);
-	$: dailyOdds = 1 / (1 - (((potentialTVL - avgDelegation) / potentialTVL) ** dailyPrizeCount));
+	$: dailyOdds = 1 / (1 - (((protocolTVL.total - avgDelegation) / protocolTVL.total) ** dailyPrizeCount));
 	$: dailyWins = input.wallets / dailyOdds;
 	$: totalWins = dailyWins * (input.weeks * 7);
-	$: apr = maxPrizes && prizeTiers && protocolTVL !== 0 ? fetchAPR(prizeTiers, maxPrizes, potentialTVL, avgDelegation) : 0;
+	$: apr = maxPrizes && prizeTiers && prizeChances && protocolTVL.total !== 0 ? fetchAPR(prizeTiers, dprMultiplier, maxPrizes, protocolTVL.total, avgDelegation) : 0;
 	$: totalGains = (input.depositAmount * (apr / 100)) * (input.weeks / 52);
 
 	// Reactive Deposit link:
@@ -94,7 +104,7 @@
     	searchParams.set('weeks', input.weeks.toString());
     	searchParams.set('wallets', input.wallets.toString());
     	searchParams.set('chain', chain);
-			goto(`?${searchParams.toString()}`, { noscroll: true, keepfocus: true });
+			goto(`?${searchParams.toString()}`, { noScroll: true, keepFocus: true });
 		}
 	}
 
@@ -115,6 +125,17 @@
 	const getGasCosts = async () => {
 		gasCosts = 0;
 		gasCosts = await fetchDelegationCost(chain);
+	}
+
+	// Function to get a chain's TVL:
+	const getChainTVL = (chain: Chain, tvl: { eth: number, poly: number, avax: number, op: number, total: number }) => {
+		type ValidChain = 'eth' | 'poly' | 'avax' | 'op';
+		const validChains: Chain[] = ['eth', 'poly', 'avax', 'op'];
+		if(validChains.includes(chain)) {
+			return tvl[chain as ValidChain];
+		} else {
+			return 0;
+		}
 	}
 
 	onMount(async () => {
@@ -167,23 +188,13 @@
 			<span class="tvl">
 				<span>There is currently</span>
 				<span class="value">
-					{#if protocolTVL > 0}
-						${formatNum(protocolTVL)}
+					{#if protocolTVL.total > 0}
+						${formatNum(protocolTVL.total)}
 					{:else}
 						~loading~
 					{/if}
 				</span>
 				<span>deposited in PoolTogether V4</span>
-			</span>
-			<span class="dailyPrizes">
-				<span>We give out</span>
-				<span class="value">{dailyPrizeCount}</span>
-				<span>prizes every day</span>
-			</span>
-			<span class="dailyWinnings">
-				<span>This means</span>
-				<span class="value">{formatDollars(dailyPrizeWinnings)}</span>
-				<span>awarded daily</span>
 			</span>
 			<img src="/images/poolyflip.gif" alt="PoolyFlip">
 		</div>
@@ -265,7 +276,7 @@
 	</div>
 
 	<!-- Settings Component -->
-	<Settings bind:maxPrizes bind:prizeTiers bind:dailyPrizeCount bind:dailyPrizeWinnings bind:chain />
+	<Settings bind:maxPrizes bind:prizeTiers bind:chain bind:dpr bind:totalPrize />
 
 </section>
 
@@ -316,6 +327,7 @@
 	input {
 		text-align: center;
 		-moz-appearance: textfield;
+		appearance: textfield;
 	}
 	
 	input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
