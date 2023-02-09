@@ -13,10 +13,11 @@ const ticketABI: ABI = [{ constant: true, inputs: [{ name: "_target", type: "uin
 
 // Function to fetch PoolTogether V4 TVL:
 export const fetchTVL = async () => {
-  let timestamp = (Date.now() / 1000).toFixed(0);
-  let ethTVL = parseInt(await weaver.eth.query(ethTicket, ticketABI, 'getTotalSupplyAt', [timestamp]));
-  let polyTVL = parseInt(await weaver.poly.query(polyTicket, ticketABI, 'getTotalSupplyAt', [timestamp]));
-  let avaxTVL = parseInt(await weaver.avax.query(avaxTicket, ticketABI, 'getTotalSupplyAt', [timestamp]));
-  let opTVL = parseInt(await weaver.op.query(opTicket, ticketABI, 'getTotalSupplyAt', [timestamp]));
-  return (ethTVL + polyTVL + avaxTVL + opTVL) / (10 ** decimals);
+  const timestamp = (Date.now() / 1000).toFixed(0);
+  const eth = parseInt(await weaver.eth.query(ethTicket, ticketABI, 'getTotalSupplyAt', [timestamp])) / (10 ** decimals);
+  const poly = parseInt(await weaver.poly.query(polyTicket, ticketABI, 'getTotalSupplyAt', [timestamp])) / (10 ** decimals);
+  const avax = parseInt(await weaver.avax.query(avaxTicket, ticketABI, 'getTotalSupplyAt', [timestamp])) / (10 ** decimals);
+  const op = parseInt(await weaver.op.query(opTicket, ticketABI, 'getTotalSupplyAt', [timestamp])) / (10 ** decimals);
+  const total = eth + poly + avax + op;
+  return { eth, poly, avax, op, total }
 }
