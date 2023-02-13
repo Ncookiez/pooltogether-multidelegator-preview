@@ -140,7 +140,7 @@
 			<span>settings.</span>
 		</span>
 		<span class="maxDailyPrizes">Maximum of <input type="number" bind:value={maxPrizes}> prize{maxPrizes === 1 ? '' : 's'} a day, per wallet!</span>
-		<span class="dpr">DPR of <input type="number" bind:value={dpr}>%</span>
+		<span class="dpr">DPR of <input type="number" step="0.000000001" bind:value={dpr}></span>
 		<span class="prizeTiers">
 			<span class="headers">
 				<span><strong># of Prizes</strong></span>
@@ -230,7 +230,7 @@
 	}
 
 	.settingsModal .dpr input {
-		width: 10ch;
+		width: 12ch;
 	}
 
 	.settingsModal .prizeTiers {
