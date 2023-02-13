@@ -43,10 +43,10 @@
 	$: prizeChances = prizeTiers.map(tier => tier.num * dprMultiplier);
 	$: dailyPrizeCount = prizeChances.reduce((a, b) => a + b, 0);
 	$: avgDelegation = input.depositAmount / (input.wallets || 1);
-	$: dailyOdds = 1 / (1 - (((protocolTVL.total - avgDelegation) / protocolTVL.total) ** dailyPrizeCount));
+	$: dailyOdds = 1 / (1 - (((chainTVL - avgDelegation) / chainTVL) ** dailyPrizeCount));
 	$: dailyWins = input.wallets / dailyOdds;
 	$: totalWins = dailyWins * (input.weeks * 7);
-	$: apr = maxPrizes && prizeTiers && prizeChances && protocolTVL.total !== 0 ? fetchAPR(prizeTiers, dprMultiplier, maxPrizes, protocolTVL.total, avgDelegation) : 0;
+	$: apr = maxPrizes && prizeTiers && prizeChances && chainTVL !== 0 ? fetchAPR(prizeTiers, dprMultiplier, maxPrizes, chainTVL, avgDelegation) : 0;
 	$: totalGains = (input.depositAmount * (apr / 100)) * (input.weeks / 52);
 
 	// Reactive Deposit link:

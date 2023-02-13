@@ -71,10 +71,10 @@
 	];
 
 	// Default DPRs:
-	const ethDPR = 0.0083506;
-	const polyDPR = 0.0046552;
-	const avaxDPR = 0.0054230;
-	const opDPR = 0.0015837;
+	const ethDPR = 0.000083506;
+	const polyDPR = 0.000046552;
+	const avaxDPR = 0.000054230;
+	const opDPR = 0.000015837;
 
 	// Reactive Prize Variables:
 	$: prizeTiers = getPrizeTiers(chain);
