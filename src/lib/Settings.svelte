@@ -71,10 +71,10 @@
 	];
 
 	// Default DPRs:
-	const ethDPR = 0.0083506;
-	const polyDPR = 0.0046552;
-	const avaxDPR = 0.0054230;
-	const opDPR = 0.0015837;
+	const ethDPR = 0.000083506;
+	const polyDPR = 0.000046552;
+	const avaxDPR = 0.000054230;
+	const opDPR = 0.000015837;
 
 	// Reactive Prize Variables:
 	$: prizeTiers = getPrizeTiers(chain);
@@ -140,7 +140,7 @@
 			<span>settings.</span>
 		</span>
 		<span class="maxDailyPrizes">Maximum of <input type="number" bind:value={maxPrizes}> prize{maxPrizes === 1 ? '' : 's'} a day, per wallet!</span>
-		<span class="dpr">DPR of <input type="number" bind:value={dpr}>%</span>
+		<span class="dpr">DPR of <input type="number" step="0.000000001" bind:value={dpr}></span>
 		<span class="prizeTiers">
 			<span class="headers">
 				<span><strong># of Prizes</strong></span>
@@ -230,7 +230,7 @@
 	}
 
 	.settingsModal .dpr input {
-		width: 10ch;
+		width: 12ch;
 	}
 
 	.settingsModal .prizeTiers {
