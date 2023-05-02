@@ -26,18 +26,17 @@
 	// Default Prize Tiers:
 	const ethPrizeTiers: { prize: number, num: number }[] = [
 		{ prize: 5000, num: 1 },
-		{ prize: 100, num: 2 },
 		{ prize: 100, num: 4 },
+		{ prize: 100, num: 8 },
 		{ prize: 100, num: 16 },
 		{ prize: 100, num: 32 },
 		{ prize: 100, num: 128 }
 	];
 	const polyPrizeTiers: { prize: number, num: number }[] = [
 		{ prize: 5000, num: 1 },
-		{ prize: 10, num: 4 },
 		{ prize: 50, num: 8 },
-		{ prize: 50, num: 16 },
-		{ prize: 10, num: 32 },
+		{ prize: 10, num: 16 },
+		{ prize: 50, num: 32 },
 		{ prize: 10, num: 64 },
 		{ prize: 1, num: 128 },
 		{ prize: 10, num: 256 },
@@ -47,34 +46,34 @@
 	];
 	const avaxPrizeTiers: { prize: number, num: number }[] = [
 		{ prize: 5000, num: 1 },
-		{ prize: 20, num: 1 },
-		{ prize: 50, num: 2 },
-		{ prize: 20, num: 8 },
+		{ prize: 100, num: 1 },
+		{ prize: 100, num: 2 },
+		{ prize: 50, num: 4 },
+		{ prize: 50, num: 8 },
 		{ prize: 100, num: 16 },
 		{ prize: 50, num: 32 },
 		{ prize: 50, num: 64 },
-		{ prize: 10, num: 128 },
-		{ prize: 20, num: 256 },
-		{ prize: 10, num: 512 }
+		{ prize: 10, num: 512 },
+		{ prize: 10, num: 1024 }
 	];
 	const opPrizeTiers: { prize: number, num: number }[] = [
 		{ prize: 5000, num: 1 },
-		{ prize: 20, num: 1 },
-		{ prize: 50, num: 2 },
-		{ prize: 20, num: 8 },
+		{ prize: 100, num: 1 },
+		{ prize: 100, num: 2 },
+		{ prize: 50, num: 4 },
+		{ prize: 50, num: 8 },
 		{ prize: 100, num: 16 },
 		{ prize: 50, num: 32 },
 		{ prize: 50, num: 64 },
-		{ prize: 10, num: 128 },
-		{ prize: 20, num: 256 },
-		{ prize: 10, num: 512 }
+		{ prize: 10, num: 512 },
+		{ prize: 10, num: 1024 }
 	];
 
 	// Default DPRs:
-	const ethDPR = 0.000083506;
-	const polyDPR = 0.000046552;
-	const avaxDPR = 0.000054230;
-	const opDPR = 0.000015837;
+	const ethDPR = 0.000085068;
+	const polyDPR = 0.000062136;
+	const avaxDPR = 0.000044383;
+	const opDPR = 0.000064109;
 
 	// Reactive Prize Variables:
 	$: prizeTiers = getPrizeTiers(chain);
